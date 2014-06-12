@@ -391,7 +391,7 @@ __sciNotify(wParam, lParam, msg, hwnd){
     __sciObj.annotLinesAdded := NumGet(lParam + a_Ptrsize * 21)
     __sciObj.updated         := NumGet(lParam + a_Ptrsize * 22)
 
-    __sciObj.notify(wParam, lParam, msg, hwnd)                ; Call user defined Notify Function and passes object to it as last parameter
+    __sciObj.notify(wParam, lParam, msg, hwnd)                ; Call user defined Notify Function and passes object to it as first parameter
     return __sciObj := ""                                               ; free object
 }
 
