@@ -12,8 +12,8 @@
 */
 
 ; Load some random text
-Splitpath, a_ahkpath,,ahkDir
 FileRead, text, %ahkDir%/license.txt
+Splitpath, %a_ahkpath%,,ahkDir
 
 Gui +LastFound
 sci := new scintilla(WinExist())
@@ -72,7 +72,7 @@ GuiClose:
     It returns the position of first found string match.
 */
 
-Search(sci, tStart, tEnd, str, flags = ""){
+Search(sci, tStart, tEnd, str, flags := ""){
 
     sci.SetSearchFlags(flags), sci.SetTargetStart(tStart), sci.SetTargetEnd(tEnd)
     return pos:=sci.SearchInTarget(strlen(str), str)
