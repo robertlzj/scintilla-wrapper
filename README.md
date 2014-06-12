@@ -1,4 +1,4 @@
-scintilla-wrapper
+scintilla-wrapper AHK V2
 =================
 Migrate SCI.ahk from AHK_L(V1) to **AHK V2**.
 
