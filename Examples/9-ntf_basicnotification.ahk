@@ -22,7 +22,7 @@ return
 GuiClose:
 ExitApp
 
-Notify(wParam, lParam, msg, hwnd, obj){
+Notify(obj, wParam, lParam, msg, hwnd){
 
 if (obj.scnCode = SCN_CHARADDED)
 tooltip % chr(obj.ch) ; obj is in this case the scintilla object above. The obj.sc variable contains the latest character added to the control
