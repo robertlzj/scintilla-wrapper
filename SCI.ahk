@@ -1,4 +1,4 @@
-﻿; Title: Scintilla Wrapper for AHK
+; Title: Scintilla Wrapper for AHK
 
 class scintilla {
     hwnd            := 0        ; Component Handle
@@ -43,7 +43,7 @@ class scintilla {
             return this
     }
 
-    __call(msg, ByRef wParam=0, ByRef lParam=0, params*){
+    __call(msg, ByRef wParam:=0, ByRef lParam:=0, params*){
 
         if (msg = "Add")
             __SCI(this.hwnd := __Add(wParam, lParam, params*), this)
@@ -67,7 +67,7 @@ class scintilla {
             (msg = "GetLine") ? (VarSetCapacity(lParam, this.linelength(wParam)+1 * (a_isunicode ? 2 : 1)),lParam := &lParam, buf:=true) : null
 	    (msg = "GetCurLine") ? (VarSetCapacity(lParam, this.linelength(wParam)+1 * (a_isunicode ? 2 : 1)), lParam := &lParam, buf:=true) : null
             (msg = "GetTextRange") ? (range:=abs(wParam.1 - wParam.2)+1, dSize :=  __sendEditor(this.hwnd, "GetLength")
-                                     ,VarSetCapacity(lParam, range > dSize ? (dSize, wParam.2 := dSize) : range)
+                                     ,VarSetCapacity(lParam, range > dSize ? (wParam.2 := dSize,dSize) : range)
                                      ,VarSetCapacity(textRange, 12, 0)
                                      ,NumPut(wParam.1,textRange,0,"UInt")
                                      ,NumPut(wParam.2,textRange,4,"UInt")
@@ -82,7 +82,7 @@ class scintilla {
             ; Retrieve Text from buffer
             ; I must switch lParam to another variable when using GetTextRange because lParam cant be overwriten
             ; It has the pointer to the TextRange Structure
-            buf ? (lParam := StrGet((msg = "GetTextRange") ? blParam : &lParam, "CP0"), buf:=false) : null ; convert the text from ANSI
+	    buf ? (lParam := StrGet((msg = "GetTextRange") ? blParam : lParam, "CP0"), buf:=false) : null ; convert the text from ANSI
             return res
         }
     }
@@ -90,7 +90,7 @@ class scintilla {
 
 class sciCharRange {
 
-    __new(_cMin=0, _cMax=0){
+    __new(_cMin:=0, _cMax:=0){
 
         this.cMin := _cMin
         this.cMax := _cMax
@@ -98,7 +98,7 @@ class sciCharRange {
 }
 class sciTextRange {
 
-    __new(_chrg=0, _pStr=0){
+    __new(_chrg:=0, _pStr:=0){
 
         if (!isObject(_chrg)){
             Msgbox % 0x0
@@ -113,7 +113,7 @@ class sciTextRange {
 }
 class sciTextToFind {
 
-    __new(_chrg=0, _text="", _found=0){
+    __new(_chrg:=0, _text:="", _found:=0){
 
         if (!isObject(_chrg) || !isObject(_found)) {
             Msgbox % 0x0
@@ -129,7 +129,7 @@ class sciTextToFind {
 }
 class sciRectangle {
 
-    __new(_left=0, _top=0, _right=0, _bottom=0){
+    __new(_left:=0, _top:=0, _right:=0, _bottom:=0){
 
         this.left    := _left
         this.top     := _top
@@ -139,7 +139,7 @@ class sciRectangle {
 }
 class sciRangeToFormat {
 
-    __new(_hdc=0, _hdcTarget=0, _rc=0, _rcPage=0, _chrg=0){
+    __new(_hdc:=0, _hdcTarget:=0, _rc:=0, _rcPage:=0, _chrg:=0){
         this.hdc         := _hdc                                        ; The Surface ID we print to
         this.hdcTarget   := _hdcTarget                                  ; The Surface ID we use for measuring (may be same as hdc)
         this.rc          := _rc ? _rc : new sciRectangle                ; Rectangle in which to print
@@ -242,7 +242,7 @@ class sciRangeToFormat {
         exitapp
     (end)
 */
-__Add(hParent=0, x=5, y=5, w=590, h=390, DllPath="", Styles=""){
+__Add(hParent:=0, x:=5, y:=5, w:=590, h:=390, DllPath:="", Styles:=""){
     static WS_OVERLAPPED:=0x00000000,WS_POPUP:=0x80000000,WS_CHILD:=0x40000000,WS_MINIMIZE:=0x20000000
     ,WS_VISIBLE:=0x10000000,WS_DISABLED:=0x08000000,WS_CLIPSIBLINGS:=0x04000000,WS_CLIPCHILDREN:=0x02000000
     ,WS_MAXIMIZE:=0x01000000,WS_CAPTION:=0x00C00000,WS_BORDER:=0x00800000,WS_DLGFRAME:=0x00400000
@@ -313,28 +313,28 @@ __Add(hParent=0, x=5, y=5, w=590, h=390, DllPath="", Styles=""){
     __sendEditor(hSci2, "SCI_SETMARGINWIDTHN",0,50)  ; Set the margin 0 to 50px on the second component.
     (End)
 */
-__sendEditor(hwnd, msg=0, wParam=0, lParam=0){
+__sendEditor(hwnd, msg:=0, wParam:=0, lParam:=0){
     static
 
     hwnd := !hwnd ? oldhwnd : hwnd, oldhwnd := hwnd, msg := !(msg+0) ? "SCI_" msg : msg
 
-    if !%hwnd%_df
+    if !df_%hwnd%
 	{
-        SendMessage, SCI_GETDIRECTFUNCTION,0,0,,ahk_id %hwnd%
-        %hwnd%_df := ErrorLevel
-        SendMessage, SCI_GETDIRECTPOINTER,0,0,,ahk_id %hwnd%
-        %hwnd%_dp := ErrorLevel
+        SendMessage, % SCI_GETDIRECTFUNCTION,0,0,,ahk_id %hwnd%
+        df_%hwnd% := ErrorLevel
+        SendMessage, % SCI_GETDIRECTPOINTER,0,0,,ahk_id %hwnd%
+        dp_%hwnd% := ErrorLevel
 	}
 
     if !msg && !wParam && !lParam   ; called only with the hwnd param from SCI_Add
         return                      ; Exit because we did what we needed to do already.
 
     ; The fast way to control Scintilla
-    return DllCall(%hwnd%_df            ; DIRECT FUNCTION
-                  ,"UInt" ,%hwnd%_dp    ; DIRECT POINTER
+    return DllCall(df_%hwnd%            ; DIRECT FUNCTION
+                  ,"UInt" ,dp_%hwnd%    ; DIRECT POINTER
                   ,"UInt" ,!(msg+0) ? %msg% : msg
-                  ,"Int"  ,inStr(wParam, "-") ? wParam : (%wParam%+0 ? %wParam% : wParam) ; handles negative ints
-                  ,"Int"  ,%lParam%+0 ? %lParam% : lParam)
+                ,"Int"  ,inStr(wParam, "-") ? wParam : ((- - wParam!=wParam && %wParam%+0)? %wParam% : wParam) ; handles negative ints
+                ,"Int"  ,(- - lParam!=lParam && %lParam%+0)? %lParam% : lParam)
 }
 
 /*
@@ -391,7 +391,7 @@ __sciNotify(wParam, lParam, msg, hwnd){
     __sciObj.annotLinesAdded := NumGet(lParam + a_Ptrsize * 21)
     __sciObj.updated         := NumGet(lParam + a_Ptrsize * 22)
 
-    __sciObj.notify(wParam, lParam, msg, hwnd, __sciObj)                ; Call user defined Notify Function and passes object to it as last parameter
+    __sciObj.notify(wParam, lParam, msg, hwnd)                ; Call user defined Notify Function and passes object to it as last parameter
     return __sciObj := ""                                               ; free object
 }
 
@@ -402,10 +402,10 @@ __isHexColor(hex, msg){
         return false
 }
 
-__SCI(var, val=""){
+__SCI(var, val:=""){
     static
 
-    if (RegExMatch(var,"i)[ `n-\.%,(\\\/=&^]")) ; Check if it is a valid variable name
+    if (RegExMatch(var,"i)[ `n-\.`%,(\\\/=&^]")) ; Check if it is a valid variable name
         return
 
 	lvar := %var%, val ? %var% := val : null
@@ -561,7 +561,7 @@ global SCLEX_CONTAINER:=0,SCLEX_NULL:=1,SCLEX_PYTHON:=2,SCLEX_CPP:=3,SCLEX_HTML:
 ,SCE_AHKL_OBJECT:=18,SCE_AHKL_USERFUNCTION:=19,SCE_AHKL_DIRECTIVE:=20,SCE_AHKL_COMMAND:=21,SCE_AHKL_PARAM:=22,SCE_AHKL_CONTROLFLOW:=23
 ,SCE_AHKL_BUILTINFUNCTION:=24,SCE_AHKL_BUILTINVAR:=25,SCE_AHKL_KEY:=26,SCE_AHKL_USERDEFINED1:=27,SCE_AHKL_USERDEFINED2:=28,SCE_AHKL_ESCAPESEQ:=30
 ,SCE_AHKL_ERROR:=31,AHKL_LIST_DIRECTIVES:=0,AHKL_LIST_COMMANDS:=1,AHKL_LIST_PARAMETERS:=2,AHKL_LIST_CONTROLFLOW:=3,AHKL_LIST_FUNCTIONS:=4
-,AHKL_LIST_VARIABLES:=5,AHKL_LIST_KEYS:=6,AHKL_LIST_USERDEFINED1:=7,AHKL_LIST_USERDEFINED2:=8,SCLEX_AUTOMATIC=1000
+,AHKL_LIST_VARIABLES:=5,AHKL_LIST_KEYS:=6,AHKL_LIST_USERDEFINED1:=7,AHKL_LIST_USERDEFINED2:=8,SCLEX_AUTOMATIC:=1000
 }
 
 ; Notifications
