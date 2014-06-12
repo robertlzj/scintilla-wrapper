@@ -12,8 +12,8 @@
 */
 
 ; Load some random text
-FileRead, text, %ahkDir%/license.txt
 Splitpath, %a_ahkpath%,,ahkDir
+FileRead, text, %ahkDir%/license.txt
 
 Gui +LastFound
 sci := new scintilla(WinExist())
