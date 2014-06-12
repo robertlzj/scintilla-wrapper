@@ -1,18 +1,18 @@
-﻿#include ..\SCI.ahk
+#include ..\SCI.ahk
 #singleinstance force
 #Commentflag //
 
 // Command list
-Dir=
+Dir:="
 (
 #allowsamelinecomments #clipboardtimeout #commentflag #errorstdout #escapechar #hotkeyinterval
 #hotkeymodifiertimeout #hotstring #if #iftimeout #ifwinactive #ifwinexist #include #includeagain
 #installkeybdhook #installmousehook #keyhistory #ltrim #maxhotkeysperinterval #maxmem #maxthreads
 #maxthreadsbuffer #maxthreadsperhotkey #menumaskkey #noenv #notrayicon #persistent #singleinstance
 #usehook #warn #winactivateforce
-)
+)"
 
-Com=
+Com:="
 (
 autotrim blockinput clipwait control controlclick controlfocus controlget controlgetfocus
 controlgetpos controlgettext controlmove controlsend controlsendraw controlsettext coordmode
@@ -38,9 +38,9 @@ winclose winget wingetactivestats wingetactivetitle wingetclass wingetpos winget
 winhide winkill winmaximize winmenuselectitem winminimize winminimizeall winminimizeallundo winmove
 winrestore winset winsettitle winshow winwait winwaitactive winwaitclose winwaitnotactive
 fileencoding
-)
+)"
 
-Param=
+Param:="
 (
 ltrim rtrim join ahk_id ahk_pid ahk_class ahk_group processname minmax controllist statuscd
 filesystem setlabel alwaysontop mainwindow nomainwindow useerrorlevel altsubmit hscroll vscroll
@@ -70,15 +70,15 @@ yes no ok cancel abort retry ignore force on off all send wanttab monitorcount m
 monitorname monitorworkarea pid base useunsetlocal useunsetglobal localsameasglobal str astr wstr
 int64 int short char uint64 uint ushort uchar float double int64p intp shortp charp uint64p uintp
 ushortp ucharp floatp doublep ptr
-)
+)"
 
-Flow=
+Flow:="
 (
 break continue else exit exitapp gosub goto loop onexit pause repeat return settimer sleep
 suspend static global local byref while until for
-)
+)"
 
-Fun=
+Fun:="
 (
 abs acos asc asin atan ceil chr cos dllcall exp fileexist floor getkeystate numget numput
 registercallback il_add il_create il_destroy instr islabel isfunc ln log lv_add lv_delete
@@ -91,9 +91,9 @@ objgetcapacity objgetaddress objnewenum objaddref objrelease objclone _insert _r
 _maxindex _setcapacity _getcapacity _getaddress _newenum _addref _release _clone comobjcreate
 comobjget comobjconnect comobjerror comobjactive comobjenwrap comobjunwrap comobjparameter
 comobjmissing comobjtype comobjvalue comobjarray
-)
+)"
 
-BIVar=
+BIVar:="
 (
 a_ahkpath a_ahkversion a_appdata a_appdatacommon a_autotrim a_batchlines a_caretx a_carety
 a_computername a_controldelay a_cursor a_dd a_ddd a_dddd a_defaultmousespeed a_desktop
@@ -114,9 +114,9 @@ a_timesincepriorhotkey a_timesincethishotkey a_titlematchmode a_titlematchmodesp
 a_wday a_windelay a_windir a_workingdir a_yday a_year a_yweek a_yyyy clipboard clipboardall comspec
 programfiles a_thisfunc a_thislabel a_ispaused a_iscritical a_isunicode a_ptrsize errorlevel
 true false
-)
+)"
 
-Keys=
+Keys:="
 (
 shift lshift rshift alt lalt ralt control lcontrol rcontrol ctrl lctrl rctrl lwin rwin appskey
 altdown altup shiftdown shiftup ctrldown ctrlup lwindown lwinup rwindown rwinup lbutton rbutton
@@ -132,10 +132,10 @@ f20 f21 f22 f23 f24 browser_back browser_forward browser_refresh browser_stop br
 browser_favorites browser_home volume_mute volume_down volume_up media_next media_prev media_stop
 media_play_pause launch_mail launch_media launch_app1 launch_app2 blind click raw wheelleft
 wheelright
-)
+)"
 
-UD1 =
-UD2 =
+UD1 :=""
+UD2 :=""
 
 Gui +LastFound
 
